@@ -3,11 +3,17 @@ import sequelize from "./config";
 import Score from "./models/Score";
 
 const app = express();
+const cors = require("cors");
+
+app.use(cors());
 
 app.use(express.json());
 
 app.post("/api/scores", async (req, res) => {
   const { name, score } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
   try {
     const newScore = await Score.create({ name, score });
     res.status(201).json(newScore);
